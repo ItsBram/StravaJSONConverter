@@ -1,0 +1,36 @@
+# Environment variables with API keys
+.env
+.env.local
+
+# SQLite database
+*.db
+*.sqlite
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Example data
+exampleData.json
+
+# Claude memory
+.claude/

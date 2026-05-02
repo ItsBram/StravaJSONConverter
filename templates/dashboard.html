@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Strava Data Connector - Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h2>Welcome, {{ athlete.firstname or 'Athlete' }}!</h2>
+        <p>Your Strava data is ready for export</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Activities</h3>
+            <p class="stat-value">{{ stats.total_activities }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Distance</h3>
+            <p class="stat-value">{{ "%.1f"|format(stats.total_distance / 1000) }} km</p>
+        </div>
+        <div class="stat-card">
+            <h3>Gear Items</h3>
+            <p class="stat-value">{{ gear_count }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Routes</h3>
+            <p class="stat-value">{{ routes_count }}</p>
+        </div>
+    </div>
+
+    <div class="action-card">
+        <h3>Data Actions</h3>
+        <div class="action-buttons">
+            <button id="syncBtn" class="btn btn-primary" onclick="startSync()">
+                <span class="btn-icon">↻</span> Refresh Data
+            </button>
+            <a href="/export/all" class="btn btn-success">
+                <span class="btn-icon">⬇</span> Export All Data (JSON)
+            </a>
+        </div>
+
+        <div id="syncProgress" class="sync-progress" style="display: none;">
+            <div class="progress-header">
+                <span id="progressText">Starting sync...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h3>Export Details</h3>
+        <p>The JSON export includes:</p>
+        <ul>
+            <li>Complete athlete profile and zones</li>
+            <li>All activities with detailed metrics (power, heart rate, etc.)</li>
+            <li>Time-series data streams (GPS, heart rate, power, cadence)</li>
+            <li>Per-activity zone distributions</li>
+            <li>All gear (bikes, shoes) with usage statistics</li>
+            <li>Saved routes</li>
+            <li>Summary statistics for training analysis</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let syncInterval = null;
+
+function startSync() {
+    fetch('/sync/start', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.job_id) {
+                showProgress();
+                syncInterval = setInterval(checkProgress, 1000);
+            }
+        });
+}
+
+function checkProgress() {
+    fetch('/sync/status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'completed') {
+                updateProgress(100, 'Sync complete!');
+                setTimeout(() => {
+                    hideProgress();
+                    clearInterval(syncInterval);
+                    location.reload();
+                }, 2000);
+            } else if (data.status === 'failed') {
+                hideProgress();
+                clearInterval(syncInterval);
+                alert('Sync failed: ' + data.error);
+            } else if (data.status === 'running') {
+                updateProgress(data.progress, data.current_step);
+            }
+        });
+}
+
+function showProgress() {
+    document.getElementById('syncProgress').style.display = 'block';
+    document.getElementById('syncBtn').disabled = true;
+}
+
+function hideProgress() {
+    document.getElementById('syncProgress').style.display = 'none';
+    document.getElementById('syncBtn').disabled = false;
+}
+
+function updateProgress(percent, text) {
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressPercent').textContent = percent + '%';
+    document.getElementById('progressText').textContent = text;
+}
+</script>
+{% endblock %}
