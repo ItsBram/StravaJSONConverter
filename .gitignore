@@ -34,3 +34,6 @@ exampleData.json
 
 # Claude memory
 .claude/
+
+# Project review
+PROJECT_REVIEW.md
