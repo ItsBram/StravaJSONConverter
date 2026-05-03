@@ -4,17 +4,17 @@ Export your Strava data to JSON for analysis with AI tools or custom processing.
 
 ## Features
 
-- **OAuth Authentication** - Secure Strava API integration
+- **OAuth Authentication** - Users log in through Strava's website, no API keys needed
 - **Complete Data Export** - Activities, athlete profile, gear, routes, zones
 - **Stream Data** - Time-indexed speed, elevation, heart rate, cadence, power
 - **Smart Downsampling** - Reduces data size while preserving key moments
 - **Background Sync** - Non-blocking data synchronization
 - **SQLite Storage** - Local database, no external dependencies
+- **Multi-User Support** - Multiple users can connect their Strava accounts simultaneously
 
 ## Requirements
 
 - Python 3.9+
-- A Strava account with API access
 
 ## Installation
 
@@ -34,12 +34,14 @@ STRAVA_CLIENT_SECRET=your_client_secret
 STRAVA_REDIRECT_URI=http://localhost:5000/auth/callback
 ```
 
-### Getting Strava API Credentials
+### Setting Up Strava API Credentials (Server Operator Only)
+
+The Strava API credentials are configured once by the server operator. End users never need their own API keys.
 
 1. Go to https://www.strava.com/settings/api
 2. Create a new API application
-3. Copy your Client ID and Client Secret
-4. Set the Authorization Callback Domain to `localhost`
+3. Copy your Client ID and Client Secret into `.env`
+4. Set the Authorization Callback Domain to `localhost` (or your production domain)
 
 ## Usage
 
@@ -51,7 +53,7 @@ python app.py
 
 2. Open http://localhost:5000 in your browser
 
-3. Click "Connect with Strava" and authorize
+3. Click "Connect with Strava" and authorize on Strava's website
 
 4. Your data will sync automatically. Export to JSON when complete.
 

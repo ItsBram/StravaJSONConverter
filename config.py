@@ -13,3 +13,16 @@ class Config:
     DATABASE_PATH = os.getenv('DATABASE_PATH', 'strava_data.db')
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{DATABASE_PATH}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    @classmethod
+    def validate(cls):
+        missing = []
+        if not cls.STRAVA_CLIENT_ID:
+            missing.append('STRAVA_CLIENT_ID')
+        if not cls.STRAVA_CLIENT_SECRET:
+            missing.append('STRAVA_CLIENT_SECRET')
+        if missing:
+            raise EnvironmentError(
+                f"Missing required environment variables: {', '.join(missing)}. "
+                f"Set these in your .env file or server environment."
+            )

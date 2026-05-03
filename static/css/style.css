@@ -44,6 +44,21 @@ body {
     opacity: 0.9;
 }
 
+.nav-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+}
+
+.nav-btn:hover {
+    opacity: 0.9;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -89,39 +104,13 @@ main.container {
     margin-bottom: 8px;
 }
 
-.config-form {
-    margin-top: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
+.btn-strava {
     display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #555;
-}
-
-.form-group input {
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: #fc4c02;
-}
-
-.form-group small {
-    display: block;
-    margin-top: 5px;
-    color: #888;
+    padding: 16px;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 20px;
 }
 
 .btn {

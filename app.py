@@ -6,6 +6,7 @@ from extensions import db
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    Config.validate()
     db.init_app(app)
 
     # Import models so they're registered with SQLAlchemy

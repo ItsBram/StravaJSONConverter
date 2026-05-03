@@ -12,8 +12,8 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/auth/strava')
 def auth_strava():
-    if not current_app.config.get('STRAVA_CLIENT_ID'):
-        return redirect(url_for('web.index'))
+    if not current_app.config.get('STRAVA_CLIENT_ID') or not current_app.config.get('STRAVA_CLIENT_SECRET'):
+        return "Server configuration error: Strava API credentials are not configured. Please contact the administrator.", 500
 
     auth_url = StravaOAuth.get_authorization_url()
     return redirect(auth_url)

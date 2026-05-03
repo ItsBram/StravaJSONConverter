@@ -13,7 +13,7 @@ web_bp = Blueprint('web', __name__)
 def index():
     athlete_id = session.get('athlete_id')
 
-    if not athlete_id or not current_app.config.get('STRAVA_CLIENT_ID'):
+    if not athlete_id:
         return render_template('index.html')
 
     athlete = Athlete.query.get(athlete_id)
@@ -31,24 +31,6 @@ def index():
                           stats=stats,
                           gear_count=Gear.query.filter_by(athlete_id=athlete_id).count(),
                           routes_count=Route.query.filter_by(athlete_id=athlete_id).count())
-
-
-@web_bp.route('/config', methods=['POST'])
-def save_config():
-    data = request.get_json()
-    client_id = data.get('client_id')
-    client_secret = data.get('client_secret')
-
-    if not client_id or not client_secret:
-        return jsonify({'error': 'Client ID and Secret are required'}), 400
-
-    current_app.config['STRAVA_CLIENT_ID'] = client_id
-    current_app.config['STRAVA_CLIENT_SECRET'] = client_secret
-
-    from api.oauth import StravaOAuth
-    auth_url = StravaOAuth.get_authorization_url()
-
-    return jsonify({'redirect_url': auth_url})
 
 
 @web_bp.route('/sync/start', methods=['POST'])
