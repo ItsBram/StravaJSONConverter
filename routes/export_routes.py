@@ -28,4 +28,4 @@ def export_all():
             }
         )
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'An internal error occurred during export.'}), 500

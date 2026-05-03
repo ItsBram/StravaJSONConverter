@@ -57,7 +57,7 @@ def auth_callback():
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return f"Authorization error: {str(e)}", 500
+        return "An internal error occurred during authorization.", 500
 
 
 @auth_bp.route('/auth/logout', methods=['POST'])
@@ -69,8 +69,8 @@ def logout():
         if athlete and athlete.access_token:
             try:
                 StravaOAuth.deauthorize(athlete.access_token)
-            except:
-                pass
+            except Exception as e:
+                print(f"Deauthorization error: {e}")
 
     session.clear()
     return redirect(url_for('web.index'))

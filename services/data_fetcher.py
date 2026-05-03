@@ -118,6 +118,7 @@ class DataFetcher:
 
         print(f"[*] Fetching activities...")
 
+        max_pages = 50
         while True:
             try:
                 activities = client.get_activities(page=page, per_page=per_page, after=after)
@@ -141,7 +142,7 @@ class DataFetcher:
                         # Continue with next activity
                         continue
 
-                if len(activities) < per_page:
+                if len(activities) < per_page or page >= max_pages:
                     break
 
                 page += 1

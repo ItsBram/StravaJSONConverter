@@ -7,7 +7,7 @@ class Activity(db.Model):
     __tablename__ = 'activities'
 
     id = db.Column(db.Integer, primary_key=True)
-    athlete_id = db.Column(db.Integer, db.ForeignKey('athletes.id'), nullable=False)
+    athlete_id = db.Column(db.Integer, db.ForeignKey('athletes.id'), nullable=False, index=True)
     external_id = db.Column(db.String(100))
     upload_id = db.Column(db.Integer)
     name = db.Column(db.String(200))
@@ -19,7 +19,7 @@ class Activity(db.Model):
     elev_low = db.Column(db.Float)
     type = db.Column(db.String(50))
     sport_type = db.Column(db.String(50))
-    start_date = db.Column(db.DateTime)
+    start_date = db.Column(db.DateTime, index=True)
     start_date_local = db.Column(db.DateTime)
     timezone = db.Column(db.String(50))
     achievement_count = db.Column(db.Integer)
@@ -162,7 +162,7 @@ class ActivityStream(db.Model):
     __tablename__ = 'activity_streams'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    activity_id = db.Column(db.Integer, db.ForeignKey('activities.id'), nullable=False)
+    activity_id = db.Column(db.Integer, db.ForeignKey('activities.id'), nullable=False, index=True)
     stream_type = db.Column(db.String(50), nullable=False)
     data_json = db.Column(db.Text, nullable=False)
     resolution = db.Column(db.String(20))

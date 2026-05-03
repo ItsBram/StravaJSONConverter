@@ -48,6 +48,7 @@
                 <div id="progressFill" class="progress-fill"></div>
             </div>
         </div>
+        <div id="syncError" class="error-message" style="display: none;"></div>
     </div>
 
     <div class="info-card">
@@ -74,11 +75,14 @@ function startSync() {
     fetch('/sync/start', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
-            if (data.job_id) {
+            if (data.error) {
+                showError(data.error);
+            } else if (data.job_id) {
                 showProgress();
                 syncInterval = setInterval(checkProgress, 1000);
             }
-        });
+        })
+        .catch(() => showError('Failed to start sync.'));
 }
 
 function checkProgress() {
@@ -95,10 +99,14 @@ function checkProgress() {
             } else if (data.status === 'failed') {
                 hideProgress();
                 clearInterval(syncInterval);
-                alert('Sync failed: ' + data.error);
+                showError('Sync failed: ' + (data.error || 'Unknown error'));
             } else if (data.status === 'running') {
                 updateProgress(data.progress, data.current_step);
             }
+        })
+        .catch(() => {
+            clearInterval(syncInterval);
+            showError('Lost connection to server.');
         });
 }
 
@@ -116,6 +124,14 @@ function updateProgress(percent, text) {
     document.getElementById('progressFill').style.width = percent + '%';
     document.getElementById('progressPercent').textContent = percent + '%';
     document.getElementById('progressText').textContent = text;
+}
+
+function showError(message) {
+    document.getElementById('syncBtn').disabled = false;
+    const el = document.getElementById('syncError');
+    el.textContent = message;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
 }
 </script>
 {% endblock %}

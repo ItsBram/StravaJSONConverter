@@ -25,7 +25,7 @@ Export your Strava data to JSON for analysis with AI tools or custom processing.
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file (use `.env.example` as template) (THIS IS OPTIONAL! Not been tested you can enter your key in the site):
+3. Create a `.env` file (use `.env.example` as template):
 
 ```env
 SECRET_KEY=your-secret-key-here

@@ -128,4 +128,4 @@ Server environment variables — configured by the operator in `.env` or server 
 - `STRAVA_CLIENT_SECRET`: Strava API Client Secret (pre-configured by operator)
 - `STRAVA_REDIRECT_URI`: Must match Strava app settings (default: `http://localhost:5000/auth/callback`)
 
-These are server-side credentials shared by all users. End users do NOT need their own Strava API applications — they simply visit the site and click "Connect with Strava". The app will refuse to start if credentials are missing.
+These are server-side credentials shared by all users. End users do NOT need their own Strava API applications — they simply visit the site and click "Connect with Strava". `Config.validate()` in `config.py` is called at startup in `app.py` and will raise `EnvironmentError` if credentials are missing.

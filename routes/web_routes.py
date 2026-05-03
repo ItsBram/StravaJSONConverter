@@ -5,6 +5,7 @@ from models.gear import Gear
 from models.route import Route
 from services.data_fetcher import DataFetcher
 from models.sync_job import SyncJob
+from extensions import db
 
 web_bp = Blueprint('web', __name__)
 
@@ -23,7 +24,7 @@ def index():
 
     stats = {
         'total_activities': Activity.query.filter_by(athlete_id=athlete_id).count(),
-        'total_distance': sum(a.distance or 0 for a in Activity.query.filter_by(athlete_id=athlete_id).all())
+        'total_distance': db.session.query(db.func.sum(Activity.distance)).filter_by(athlete_id=athlete_id).scalar() or 0
     }
 
     return render_template('dashboard.html',
@@ -64,6 +65,9 @@ def sync_status():
 
 @web_bp.route('/debug')
 def debug():
+    if not current_app.debug:
+        return jsonify({'error': 'Not found'}), 404
+
     athlete_id = session.get('athlete_id')
     if not athlete_id:
         return jsonify({'error': 'Not authenticated'}), 401
